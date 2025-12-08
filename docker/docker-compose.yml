@@ -1,0 +1,51 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:17
+    container_name: exxellent-nights-hotel_db
+    restart: always
+    environment:
+      POSTGRES_DB: exxellent-nights-hotel
+      POSTGRES_USER: exxellent-nights-hotel_user
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - hotelnet
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: exxellent-nights-hotel_backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/exxellent-nights-hotel
+      SPRING_DATASOURCE_USERNAME: exxellent-nights-hotel_user
+      SPRING_DATASOURCE_PASSWORD: secret
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    networks:
+      - hotelnet
+
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    container_name: hotel_frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+    networks:
+      - hotelnet
+
+networks:
+  hotelnet:
+
+volumes:
+  pgdata:
