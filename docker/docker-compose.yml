@@ -1,0 +1,23 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:17
+    container_name: exxellent-nights-hotel_db
+    restart: always
+    environment:
+      POSTGRES_DB: exxellent-nights-hotel
+      POSTGRES_USER: exxellent-nights-hotel_user
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - hotelnet
+
+networks:
+  hotelnet:
+
+volumes:
+  pgdata:
