@@ -1,6 +1,7 @@
 package de.exxellentnights.controller;
 
 import de.exxellentnights.api.RoomsApi;
+import de.exxellentnights.api.model.ExxResponseObj;
 import de.exxellentnights.api.model.RoomCreateDto;
 import de.exxellentnights.api.model.RoomDto;
 import de.exxellentnights.api.model.RoomTypeDto;
@@ -9,6 +10,7 @@ import de.exxellentnights.entity.Room;
 import de.exxellentnights.mapper.RoomMapper;
 import de.exxellentnights.model.RoomType;
 import de.exxellentnights.service.RoomService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,9 +40,10 @@ public class RoomController implements RoomsApi {
     }
 
     @Override
-    public ResponseEntity<String> deleteRoom(String roomNumber) {
+    public ResponseEntity<Void> deleteRoom(String roomNumber) {
+        roomService.getByRoomNumber(roomNumber);
         roomService.delete(roomNumber);
-        return ResponseEntity.ok("Zimmer %s gelöscht.".formatted(roomNumber));
+        return ResponseEntity.noContent().build();
     }
 
     @Override
