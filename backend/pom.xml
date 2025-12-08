@@ -12,6 +12,9 @@
     <properties>
         <java.version>25</java.version>
         <spring.boot.version>4.0.0</spring.boot.version>
+        <openapi.generator.version>7.5.0</openapi.generator.version>
+        <openapi.springdoc.version>2.6.0</openapi.springdoc.version>
+        <openapi.jackson.version>0.2.6</openapi.jackson.version>
     </properties>
 
     <dependencyManagement>
@@ -33,10 +36,35 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+        <!-- Spring Data JPA -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <!-- PostgreSQL -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+        </dependency>
+
+        <!-- OpenAPI -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>${openapi.springdoc.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+            <version>${openapi.jackson.version}</version>
+        </dependency>
+
+        <!-- Validation API -->
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
         </dependency>
 
         <!-- Test Dependencies -->
@@ -65,6 +93,51 @@
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                 </configuration>
+            </plugin>
+
+            <!-- OpenAPI Generator for model classes -->
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>${openapi.generator.version}</version>
+                <executions>
+                    <execution>
+                        <id>generate-openapi</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/../openapi/hotel-mgmt.yaml</inputSpec>
+                            <!-- SPRING INTERFACE GENERATOR -->
+                            <generatorName>spring</generatorName>
+                            <!-- Pakete -->
+                            <apiPackage>de.exxellentnights.api</apiPackage>
+                            <modelPackage>de.exxellentnights.api.model</modelPackage>
+                            <!-- Artefakte, die wir wollen -->
+                            <generateApis>true</generateApis>
+                            <generateModels>true</generateModels>
+                            <generateSupportingFiles>false</generateSupportingFiles>
+                            <!-- Moderne Einstellungen -->
+                            <configOptions>
+                                <!-- Generiert nur Interfaces für Controller -->
+                                <interfaceOnly>true</interfaceOnly>
+                                <skipDefaultInterface>true</skipDefaultInterface>
+                                <apiUtil>false</apiUtil>
+                                <useJakartaEe>true</useJakartaEe>
+                                <dateLibrary>java8</dateLibrary>
+                                <useBeanValidation>true</useBeanValidation>
+                            </configOptions>
+                            <!-- Wichtig für Spring Boot 3 -->
+                            <importMappings>
+                                <importMapping>javax.annotation.Generated=jakarta.annotation.Generated</importMapping>
+                            </importMappings>
+                            <typeMappings>
+                                <typeMapping>file=org.springframework.core.io.Resource</typeMapping>
+                            </typeMappings>
+
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
