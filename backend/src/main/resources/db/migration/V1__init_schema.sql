@@ -13,3 +13,7 @@ CREATE TABLE booking
     end_date    DATE        NOT NULL,
     guest_name  VARCHAR(255)
 );
+
+-- Index für Performance bei Filter-Abfragen
+CREATE INDEX idx_booking_room_dates
+    ON booking (room_number, start_date, end_date);

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class RoomController implements RoomsApi {
@@ -62,8 +63,15 @@ public class RoomController implements RoomsApi {
     }
 
     @Override
-    public ResponseEntity<List<RoomDto>> getAvailableRooms(LocalDate startDate, LocalDate endDate, Boolean hasMinibar, RoomTypeDto roomType) {
-        return null;
+    public ResponseEntity<List<RoomDto>> getAvailableRooms(LocalDate startDate, LocalDate endDate, Boolean hasMinibar, RoomTypeDto roomTypeDto) {
+        RoomType roomType = Optional.ofNullable(roomTypeDto)
+                .map(Enum::name)
+                .map(RoomType::valueOf)
+                .orElse(null);
+
+        List<RoomDto> availableRoomDtoList = roomService.findAvailableRooms(startDate, endDate, hasMinibar, roomType)
+                .stream().map(roomMapper::toDto).toList();
+        return ResponseEntity.ok(availableRoomDtoList);
     }
 
 }
