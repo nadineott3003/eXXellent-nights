@@ -44,3 +44,6 @@ Thumbs.db
 .github/instructions/nx.instructions.md
 
 .angular
+
+# Generated OpenApi Files
+/src/app/core/api/generated
