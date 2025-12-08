@@ -1,0 +1,196 @@
+openapi: 3.0.3
+info:
+  title: eXXellent Nights! Hotel Management API
+  version: 1.0.0
+  description: API zur Verwaltung von Hotelzimmern des eXXellent Nights! Hotel.
+
+servers:
+  - url: http://localhost:8080
+
+paths:
+  /rooms:
+    get:
+      operationId: getRooms
+      summary: Liste aller Hotelzimmer
+      tags:
+        - Rooms
+      responses:
+        '200':
+          description: Liste aller Zimmer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RoomDto'
+    post:
+      operationId: createRoom
+      summary: Neues Zimmer anlegen
+      tags:
+        - Rooms
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoomCreateDto'
+      responses:
+        '201':
+          description: Zimmer wurde angelegt
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomDto'
+
+  /rooms/{roomNumber}:
+    get:
+      operationId: getRoom
+      summary: Einzelnes Zimmer abfragen
+      tags:
+        - Rooms
+      parameters:
+        - $ref: '#/components/parameters/RoomNumber'
+      responses:
+        '200':
+          description: Zimmerdaten
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomDto'
+        '404':
+          description: Zimmer nicht gefunden
+    put:
+      operationId: updateRoom
+      summary: Zimmer aktualisieren
+      tags:
+        - Rooms
+      parameters:
+        - $ref: '#/components/parameters/RoomNumber'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoomUpdateDto'
+      responses:
+        '200':
+          description: Zimmer aktualisiert
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomDto'
+        '404':
+          description: Nicht gefunden
+    delete:
+      operationId: deleteRoom
+      summary: Zimmer löschen
+      tags:
+        - Rooms
+      parameters:
+        - $ref: '#/components/parameters/RoomNumber'
+      responses:
+        '200':
+          description: Zimmer gelöscht
+          content:
+            application/json:
+              schema:
+                type: string
+        '404':
+          description: Nicht gefunden
+
+  /rooms/available:
+    get:
+      operationId: getAvailableRooms
+      summary: Alle verfügbaren Zimmer für einen Zeitraum abrufen. Optional mit Abfrage nach Minibar oder Zimmer-Typ
+      tags:
+        - Availability
+      parameters:
+        - $ref: '#/components/parameters/StartDate'
+        - $ref: '#/components/parameters/EndDate'
+        - name: hasMinibar
+          in: query
+          required: false
+          schema:
+            type: boolean
+        - name: roomType
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/RoomTypeDto'
+      responses:
+        '200':
+          description: Liste verfügbarer Zimmer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RoomDto'
+
+components:
+  parameters:
+    RoomNumber:
+      name: roomNumber
+      in: path
+      required: true
+      schema:
+        type: string
+
+    StartDate:
+      name: startDate
+      in: query
+      required: true
+      schema:
+        type: string
+        format: date
+
+    EndDate:
+      name: endDate
+      in: query
+      required: true
+      schema:
+        type: string
+        format: date
+
+  schemas:
+    RoomTypeDto:
+      type: string
+      enum: [SINGLE, DOUBLE, SUITE]
+
+    RoomDto:
+      type: object
+      required: [roomNumber, roomType, hasMinibar]
+      properties:
+        roomNumber:
+          type: string
+        roomType:
+          $ref: '#/components/schemas/RoomTypeDto'
+        hasMinibar:
+          type: boolean
+
+    RoomCreateDto:
+      type: object
+      required: [roomNumber, roomType]
+      properties:
+        roomNumber:
+          type: string
+        roomType:
+          $ref: '#/components/schemas/RoomTypeDto'
+        hasMinibar:
+          type: boolean
+          default: false
+
+    RoomUpdateDto:
+      type: object
+      required: [roomType, hasMinibar]
+      properties:
+        roomType:
+          $ref: '#/components/schemas/RoomTypeDto'
+        hasMinibar:
+          type: boolean
+
+    AvailabilityResponseDto:
+      type: object
+      properties:
+        available:
+          type: boolean
