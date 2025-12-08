@@ -2,6 +2,9 @@ package de.exxellentnights.service;
 
 
 import de.exxellentnights.entity.Room;
+import de.exxellentnights.exception.InvalidDateRangeException;
+import de.exxellentnights.exception.RoomAlreadyExistsException;
+import de.exxellentnights.exception.RoomNotFoundException;
 import de.exxellentnights.model.RoomType;
 import de.exxellentnights.repository.RoomRepository;
 import org.springframework.stereotype.Service;
@@ -24,12 +27,12 @@ public class RoomService {
 
     public Room getByRoomNumber(String roomNumber) {
         return roomRepository.findById(roomNumber)
-                .orElseThrow(() -> new IllegalArgumentException("Room not found: " + roomNumber));
+                .orElseThrow(() -> new RoomNotFoundException(roomNumber));
     }
 
     public Room create(Room room) {
         if (roomRepository.existsById(room.getRoomNumber())) {
-            throw new IllegalArgumentException("Room already exists: " + room.getRoomNumber());
+            throw new RoomAlreadyExistsException(room.getRoomNumber());
         }
         return roomRepository.save(room);
     }
@@ -52,7 +55,7 @@ public class RoomService {
 
     private void validateDateRange(LocalDate start, LocalDate end) {
         if (start == null || end == null || !start.isBefore(end)) {
-            throw new IllegalArgumentException("Invalid date range");
+            throw new InvalidDateRangeException(start, end);
         }
     }
 

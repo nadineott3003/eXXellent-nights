@@ -41,6 +41,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RoomDto'
+        '409':
+          description: Room already exists
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExxResponseObj"
+              example:
+                status: 409
+                error: 'ROOM_ALREADY_EXISTS'
+                message: 'Room with number 101 already exists'
 
   /rooms/{roomNumber}:
     get:
@@ -58,7 +68,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/RoomDto'
         '404':
-          description: Zimmer nicht gefunden
+          description: Room not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExxResponseObj"
+              example:
+                status: 404
+                error: 'ROOM_NOT_FOUND'
+                message: 'Room with number 999 was not found'
     put:
       operationId: updateRoom
       summary: Zimmer aktualisieren
@@ -89,14 +107,18 @@ paths:
       parameters:
         - $ref: '#/components/parameters/RoomNumber'
       responses:
-        '200':
+        '204':
           description: Zimmer gelöscht
+        '404':
+          description: Zimmer nicht gefunden
           content:
             application/json:
               schema:
-                type: string
-        '404':
-          description: Nicht gefunden
+                $ref: "#/components/schemas/ExxResponseObj"
+              example:
+                status: 404
+                error: 'ROOM_NOT_FOUND'
+                message: 'Room with number 999 was not found'
 
   /rooms/available:
     get:
@@ -126,6 +148,16 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/RoomDto'
+        '400':
+          description: Invalid date range supplied
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExxResponseObj"
+              example:
+                status: 400
+                error: 'INVALID_DATE_RANGE'
+                message: 'Start date (...) must be before end date (...)'
 
 components:
   parameters:
@@ -194,3 +226,20 @@ components:
       properties:
         available:
           type: boolean
+
+    ExxResponseObj:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 404
+        responseIdentifier:
+          type: string
+          example: "ROOM_NOT_FOUND"
+        message:
+          type: string
+          example: "Room with number 999 was not found"
+      required:
+        - status
+        - responseIdentifier
+        - message
