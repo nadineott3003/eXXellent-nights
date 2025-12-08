@@ -6,6 +6,7 @@ import de.exxellentnights.api.model.RoomDto;
 import de.exxellentnights.api.model.RoomTypeDto;
 import de.exxellentnights.api.model.RoomUpdateDto;
 import de.exxellentnights.entity.Room;
+import de.exxellentnights.mapper.RoomMapper;
 import de.exxellentnights.model.RoomType;
 import de.exxellentnights.service.RoomService;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +18,12 @@ import java.util.List;
 @RestController
 public class RoomController implements RoomsApi {
 
+    private final RoomMapper roomMapper;
+
     private final RoomService roomService;
 
-    public RoomController(RoomService roomService) {
+    public RoomController(RoomMapper roomMapper, RoomService roomService) {
+        this.roomMapper = roomMapper;
         this.roomService = roomService;
     }
 
@@ -29,7 +33,7 @@ public class RoomController implements RoomsApi {
         room.setRoomNumber(roomCreateDto.getRoomNumber());
         room.setRoomType(RoomType.valueOf(roomCreateDto.getRoomType().name()));
         room.setHasMinibar(Boolean.TRUE.equals(roomCreateDto.getHasMinibar()));
-        return ResponseEntity.ok(toDto(roomService.create(room)));
+        return ResponseEntity.ok(roomMapper.toDto(roomService.create(room)));
     }
 
     @Override
@@ -40,13 +44,13 @@ public class RoomController implements RoomsApi {
 
     @Override
     public ResponseEntity<RoomDto> getRoom(String roomNumber) {
-        RoomDto roomDto = toDto(roomService.getByRoomNumber(roomNumber));
+        RoomDto roomDto = roomMapper.toDto(roomService.getByRoomNumber(roomNumber));
         return ResponseEntity.ok(roomDto);
     }
 
     @Override
     public ResponseEntity<List<RoomDto>> getRooms() {
-        List<RoomDto> roomDtoList = roomService.findAll().stream().map(this::toDto).toList();
+        List<RoomDto> roomDtoList = roomService.findAll().stream().map(roomMapper::toDto).toList();
         return ResponseEntity.ok(roomDtoList);
     }
 
@@ -54,7 +58,7 @@ public class RoomController implements RoomsApi {
     public ResponseEntity<RoomDto> updateRoom(String roomNumber, RoomUpdateDto roomUpdateDto) {
         RoomType type = RoomType.valueOf(roomUpdateDto.getRoomType().name());
         boolean minibar = Boolean.TRUE.equals(roomUpdateDto.getHasMinibar());
-        return ResponseEntity.ok(toDto(roomService.update(roomNumber, type, minibar)));
+        return ResponseEntity.ok(roomMapper.toDto(roomService.update(roomNumber, type, minibar)));
     }
 
     @Override
@@ -62,11 +66,4 @@ public class RoomController implements RoomsApi {
         return null;
     }
 
-    private RoomDto toDto(Room room) {
-        RoomDto dto = new RoomDto();
-        dto.setRoomNumber(room.getRoomNumber());
-        dto.setRoomType(RoomTypeDto.valueOf(room.getRoomType().name()));
-        dto.setHasMinibar(room.hasMinibar());
-        return dto;
-    }
 }
