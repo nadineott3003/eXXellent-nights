@@ -10,12 +10,13 @@
     <description>backend</description>
 
     <properties>
+        <encoding>UTF-8</encoding>
         <java.version>25</java.version>
-        <mapstruct.version>1.5.5.Final</mapstruct.version>
+        <mapstruct.version>1.6.3</mapstruct.version>
         <spring.boot.version>4.0.0</spring.boot.version>
-        <openapi.generator.version>7.5.0</openapi.generator.version>
-        <openapi.springdoc.version>2.6.0</openapi.springdoc.version>
-        <openapi.jackson.version>0.2.6</openapi.jackson.version>
+        <openapi.generator.version>7.17.0</openapi.generator.version>
+        <openapi.springdoc.version>3.0.0</openapi.springdoc.version>
+        <openapi.jackson.version>0.2.8</openapi.jackson.version>
     </properties>
 
     <dependencyManagement>
@@ -127,7 +128,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>
+                <version>3.14.1</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
