@@ -4,9 +4,12 @@
   "license": "MIT",
   "scripts": {
     "start": "nx serve",
-    "build": "nx build",
+    "build": "npm run api:generate && nx build",
     "test": "nx test",
     "api:generate": "ng-openapi-gen --config ng-openapi-gen.json"
+  },
+  "engines": {
+    "node": "^20.19.0 || ^22.12.0 || 24.x"
   },
   "private": true,
   "dependencies": {

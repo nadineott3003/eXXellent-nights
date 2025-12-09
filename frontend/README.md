@@ -1,101 +1,71 @@
-# Frontend
+# eXXellent Nights! - Frontend
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+## Über die Anwendung
+Angular Frontend für die Hotelmanager-Anwendung des Hotels 'eXXellent Nights!'.
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is ready ✨.
+Das Frontend basiert auf einer Angular Standalone Architektur und kommuniziert über eine mit OpenAPI generierte API mit dem Spring Boot Backend.
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/tutorials/angular-standalone-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+_Funktionen:_
+- Hotelzimmer verwalten (Übersicht aller Zimmer, Zimmer anlegen/bearbeiten/löschen)
+- Verfügbarkeiten überprüfen
 
-## Run tasks
+_Dieses Angular Frontend besteht aus folgendem technischen Setup:_
+- Angular Nx Frontend (Standalone)
+- OpenAPI basierte API-Definition und Code-Generierung (Contract-First Ansatz)
+- UI mit Tailwind CSS und Flowbite
 
-To run the dev server for your app, use:
+### Tech Stack
 
-```sh
-npx nx serve frontend
+- Angular Nx Version 22 (Standalone Ansatz) mit Angular Version 20
+- Tailwind CSS Version 4.1
+- [Flowbite](https://flowbite.com/) 4.0 (UI-Komponenten, nutzt Tailwind CSS)
+- OpenAPI Generator [ng-openapi-gen](https://www.npmjs.com/package/ng-openapi-gen/v/1.0.5)
+- 
+
+
+### Setup, Installation & Starten der Anwendung
+
+#### Vorbedingungen:
+- Node & npm installieren. Die aktuell benötigte node version kann in der [package.json](package.json) unter engines > nodes abgelesen werden
+
+#### Applikation starten
+
+Zum Starten der Applikation können die vorhandenen Skripte aus der [package.json](frontend%2Fpackage.json) genutzt werden.
+
+- Pakete installieren
+```bash
+npm install
 ```
+- Skript `build` ausführen - _Baut die Applikation und generiert die nötigen Models & Services der Openapi Definition aus [hotel-mgmt.yaml](../openapi/hotel-mgmt.yaml)_
+- Skript `start` ausführen - _Startet die Applikation, vorab sollte das Backend gestartet werden, siehe [../backend/README.md](../backend/README.md)_
 
-To create a production bundle:
+Anwendung kann im Anschluss unter http://localhost:4200/ aufgerufen werden.
 
-```sh
-npx nx build frontend
-```
 
-To see all available targets to run for a project, run:
+### OpenAPI
 
-```sh
-npx nx show project frontend
-```
+Für die Applikation wird ein Contract-First Ansatz verwendet. 
+Frontend und Backend nutzen eine OpenAPI Definition als gemeinsamen Vertrag zur Erstellung der API. 
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
+Die OpenAPI Definition ist hier zu finden: [hotel-mgmt.yaml](../openapi/hotel-mgmt.yaml)
 
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+Zur Generierung der API (inkl. Models und Services) wird der OpenAPI Generator 
+[ng-openapi-gen](https://www.npmjs.com/package/ng-openapi-gen/v/1.0.5) eingesetzt.
 
-## Add new projects
+Nach Aktualisierung der yaml muss die openapi Generierung neu ausgeführt werden, indem aus der [package.json](frontend/package.json)
+das Skript `api` ausgeführt wird.
 
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
+Die generierten Dateien sind im Nachgang unter [src/app/core/api/generated](src/app/core/api/generated) zu finden.
+Dieser Ordner ist Teil der .gitignore und wird nicht commited.
 
-Use the plugin's generator to create new projects.
+Nach Aktualisierung ist zu prüfen, ob Anpassungen an der Frontend-Umsetzung vorgenommen werden müssen.
 
-To generate a new application, use:
+### UI & Styling
 
-```sh
-npx nx g @nx/angular:app demo
-```
+In diesem Angular Frontend wird für UI & Styling folgendes eingesetzt: 
+- Tailwind 4.1 für modernes CSS ohne Build-Plugins
+- Flowbite 4.0 für UI Komponenten und Interaktionen (Modal, Toggle, Navbar)
 
-To generate a new library, use:
-
-```sh
-npx nx g @nx/angular:lib mylib
-```
-
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
-
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Set up CI!
-
-### Step 1
-
-To connect to Nx Cloud, run the following command:
-
-```sh
-npx nx connect
-```
-
-Connecting to Nx Cloud ensures a [fast and scalable CI](https://nx.dev/ci/intro/why-nx-cloud?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) pipeline. It includes features such as:
-
-- [Remote caching](https://nx.dev/ci/features/remote-cache?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task distribution across multiple machines](https://nx.dev/ci/features/distribute-task-execution?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Automated e2e test splitting](https://nx.dev/ci/features/split-e2e-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task flakiness detection and rerunning](https://nx.dev/ci/features/flaky-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-### Step 2
-
-Use the following command to configure a CI workflow for your workspace:
-
-```sh
-npx nx g ci-workflow
-```
-
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Install Nx Console
-
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
-
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Useful links
-
-Learn more:
-
-- [Learn more about this workspace setup](https://nx.dev/getting-started/tutorials/angular-standalone-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-And join the Nx community:
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+### Tests
+Derzeit sind noch keine Frontend-Tests umgesetzt.
+Das Angular Nx Setup beinhaltet ein Playwright Setup für künftig zu erstellende Tests.
