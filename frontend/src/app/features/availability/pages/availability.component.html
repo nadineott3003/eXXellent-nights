@@ -1,0 +1,121 @@
+<h1 class="text-3xl font-semibold mb-8">Zimmerverfügbarkeit prüfen</h1>
+
+<!-- FILTER CARD -->
+<div class="bg-white p-6 border border-gray-200 rounded-lg shadow max-w-3xl mb-8">
+
+  <h2 class="text-xl font-semibold mb-4">Suchkriterien</h2>
+
+  @if (errorMessage) {
+    <div class="mb-4 p-3 text-sm text-red-800 bg-red-100 border border-red-300 rounded">
+      {{ errorMessage }}
+    </div>
+  }
+
+  <!-- DATE RANGE -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+    <div>
+      <label class="block mb-2 text-sm font-medium text-gray-900">Von</label>
+      <input type="date" [(ngModel)]="dateFrom"
+             class="block w-full p-2.5 bg-gray-50 border border-gray-300
+             text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500"/>
+    </div>
+
+    <div>
+      <label class="block mb-2 text-sm font-medium text-gray-900">Bis</label>
+      <input type="date" [(ngModel)]="dateTo"
+             class="block w-full p-2.5 bg-gray-50 border border-gray-300
+             text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500"/>
+    </div>
+  </div>
+
+  <!-- OPTIONAL FILTERS -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+
+    <!-- Room Type -->
+    <div>
+      <label class="block mb-2 text-sm font-medium text-gray-900">
+        Zimmerkategorie (optional)
+      </label>
+
+      <select [(ngModel)]="filterRoomType"
+              class="block w-full p-2.5 bg-gray-50 border border-gray-300
+              text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500">
+
+        <option [ngValue]="null">Alle Kategorien</option>
+
+        @for (type of roomTypes; track type) {
+          <option [ngValue]="type">{{ type }}</option>
+        }
+      </select>
+    </div>
+
+    <!-- Minibar Filter -->
+    <div>
+      <label class="block mb-2 text-sm font-medium text-gray-900">
+        Minibar (optional)
+      </label>
+
+      <select [(ngModel)]="filterMinibar"
+              class="block w-full p-2.5 bg-gray-50 border border-gray-300
+                     text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500">
+
+        <option [ngValue]="null">Alle Zimmer</option>
+        <option [ngValue]="true">Nur Zimmer mit Minibar</option>
+        <option [ngValue]="false">Nur Zimmer ohne Minibar</option>
+      </select>
+    </div>
+
+  </div>
+
+  <!-- SEARCH BUTTON -->
+  <button
+    (click)="search()"
+    class="cursor-pointer text-white bg-blue-600 hover:bg-blue-700 font-medium
+           rounded-lg text-sm px-5 py-2.5">
+    Verfügbarkeit prüfen
+  </button>
+
+</div>
+
+
+<!-- RESULT TABLE -->
+<div class="bg-white p-6 border border-gray-200 rounded-lg shadow">
+  <h2 class="text-xl font-semibold mb-4">Verfügbare Zimmer</h2>
+
+  @if (loading) {
+    <p>Zimmer werden geladen...</p>
+    <div class="h-2 bg-gray-200 rounded mt-2 animate-pulse"></div>
+  }
+
+  @if (!loading && hasSearched && availableRooms.length === 0) {
+    <p class="text-gray-500">Keine Zimmer verfügbar für diesen Zeitraum.</p>
+  }
+
+  @if (!loading && !hasSearched) {
+    <p class="text-gray-500">Bitte benutze die Suche zur Anzeige verfügbarer Zimmer.</p>
+  }
+
+  @if (!loading && availableRooms.length > 0) {
+    <table class="w-full text-sm text-left text-gray-700">
+      <thead class="text-xs uppercase bg-gray-100">
+      <tr>
+        <th class="px-4 py-3">Zimmer</th>
+        <th class="px-4 py-3">Kategorie</th>
+        <th class="px-4 py-3">Minibar</th>
+      </tr>
+      </thead>
+
+      <tbody>
+        @for (room of availableRooms; track room.roomNumber) {
+          <tr class="border-b hover:bg-gray-50">
+            <td class="px-4 py-3 font-medium">{{ room.roomNumber }}</td>
+            <td class="px-4 py-3">{{ room.roomType }}</td>
+            <td class="px-4 py-3">
+              {{ room.hasMinibar ? 'Ja' : 'Nein' }}
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>
