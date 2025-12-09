@@ -18,23 +18,12 @@ Das Backend nutzt Flyway für die Erstellung und Migration der Datenbank. (Siehe
 
 ## Anwendung starten
 ### Lokal
-#### Lokale Entwicklung
-
 1. PostgreSQL mit Docker starten
 ```bash
 cd docker && docker compose up db
 ```
 
-2. Frontend und/oder Backend lokal starten (siehe Details in den jeweiliges READMEs)
+2. Backend lokal starten (siehe [README.md](backend/README.md))
 
-
-#### Gesamte Anwendung mit Docker starten
-
-Die gesamte Anwendung (Frontend, Backend, Datenbank) kann lokal über Docker gestartet werden
-
-1. Docker ggf. installieren & starten
-2. Folgendes ausführen:
-```bash
-cd docker && docker compose up --build
-```
+3. Frontend lokal starten (siehe [README.md](frontend/README.md))
 
