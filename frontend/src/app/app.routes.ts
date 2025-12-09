@@ -2,6 +2,7 @@ import { Route } from '@angular/router';
 import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
 import { RoomListComponent } from './features/rooms/pages/room-list/room-list.component';
 import { RoomCreateComponent } from './features/rooms/pages/room-create/room-create.component';
+import { RoomEditComponent } from './features/rooms/pages/room-edit/room-edit.component';
 
 export const appRoutes: Route[] = [
   {
@@ -15,6 +16,10 @@ export const appRoutes: Route[] = [
       {
         path: 'rooms/create',
         component: RoomCreateComponent,
+      },
+      {
+        path: 'rooms/:roomNumber/edit',
+        component: RoomEditComponent,
       },
       { path: '', redirectTo: 'rooms', pathMatch: 'full' },
     ],

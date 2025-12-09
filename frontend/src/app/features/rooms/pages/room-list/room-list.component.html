@@ -23,7 +23,8 @@
         <td>{{ room.roomType }}</td>
         <td>{{ room.hasMinibar ? 'Ja' : 'Nein' }}</td>
         <td>
-          <a class="text-blue-600 hover:underline mr-3">Bearbeiten</a>
+          <a [routerLink]="['/rooms', room.roomNumber, 'edit']"
+             class="text-blue-600 hover:underline mr-3">Bearbeiten</a>
           <a class="text-red-600 hover:underline">Löschen</a>
         </td>
       </tr>

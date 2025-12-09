@@ -1,0 +1,94 @@
+<h1 class="text-3xl font-semibold mb-6">Zimmer bearbeiten</h1>
+
+<div class="max-w-xl p-6 bg-white border border-gray-200 rounded-lg shadow">
+
+  <!-- LOADING -->
+  @if (loading) {
+    <p>Daten werden geladen...</p>
+    <div class="h-2 bg-gray-200 rounded mt-2 animate-pulse"></div>
+  }
+
+  @if (!loading) {
+
+    <!-- GLOBAL ERROR -->
+    @if (errorMessage) {
+      <div class="mb-4 p-4 text-sm text-red-800 bg-red-100 border border-red-300 rounded-lg">
+        {{ errorMessage }}
+      </div>
+    }
+
+    <!-- ROOM NUMBER -->
+    <div class="mb-4">
+      <label class="block mb-2 text-sm font-medium text-gray-900">
+        Zimmernummer
+      </label>
+      <input
+        type="text"
+        [value]="roomNumber"
+        class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
+        readonly
+      />
+      <p class="text-gray-500 text-sm mt-1">Die Zimmernummer kann nicht geändert werden.</p>
+    </div>
+
+    <!-- ROOM TYPE -->
+    <div class="mb-4">
+      <label class="block mb-2 text-sm font-medium text-gray-900">
+        Zimmerkategorie <span class="text-red-600">*</span>
+      </label>
+
+      <select
+        [(ngModel)]="roomType"
+        class="bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5
+               focus:ring-blue-500 focus:border-blue-500"
+        [class.border-red-500]="!roomType && errorMessage"
+      >
+        <option [ngValue]="null">Bitte auswählen</option>
+        @for (type of roomTypes; track type) {
+          <option [ngValue]="type">{{ type }}</option>
+        }
+      </select>
+
+      @if (!roomType && errorMessage) {
+        <p class="text-red-600 text-sm mt-1">Bitte eine Kategorie auswählen.</p>
+      }
+    </div>
+
+    <!-- MINIBAR -->
+    <div class="flex items-center mb-6">
+      <label class="inline-flex items-center cursor-pointer">
+        <input type="checkbox" [(ngModel)]="hasMinibar" class="sr-only peer">
+
+        <div
+          class="relative w-11 h-6 bg-gray-200 rounded-full peer
+             peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300
+             peer-checked:bg-blue-600 transition-all
+             after:content-[''] after:absolute after:top-[2px] after:left-[2px]
+             after:bg-white after:border-gray-300 after:border
+             after:rounded-full after:h-5 after:w-5 after:transition-all
+             peer-checked:after:translate-x-full peer-checked:after:border-white">
+        </div>
+
+        <span class="ml-3 text-sm font-medium text-gray-900">
+          Minibar vorhanden
+        </span>
+      </label>
+    </div>
+
+    <!-- BUTTONS -->
+    <div class="flex space-x-4">
+      <button
+        (click)="submit()"
+        class="cursor-pointer text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg
+               text-sm px-5 py-2.5 text-center">
+        Speichern
+      </button>
+
+      <button routerLink="/rooms" class="cursor-pointer text-gray-700 bg-gray-200 hover:bg-gray-300 font-medium rounded-lg
+               text-sm px-5 py-2.5 text-center">
+        Abbrechen
+      </button>
+    </div>
+
+  }
+</div>
