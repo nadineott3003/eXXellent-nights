@@ -11,6 +11,8 @@ import java.util.List;
 
 public interface RoomRepository extends JpaRepository<Room, String> {
 
+    List<Room> findAllByOrderByRoomNumberAsc();
+
     @Query("""
                 SELECT r
                 FROM Room r

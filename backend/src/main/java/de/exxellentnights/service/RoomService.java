@@ -22,7 +22,7 @@ public class RoomService {
     }
 
     public List<Room> findAll() {
-        return roomRepository.findAll();
+        return roomRepository.findAllByOrderByRoomNumberAsc();
     }
 
     public Room getByRoomNumber(String roomNumber) {
