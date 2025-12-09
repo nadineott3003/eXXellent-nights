@@ -1,0 +1,31 @@
+<div class="flex items-center justify-between">
+  <h1 class="text-2xl font-bold mb-4">Zimmer verwalten</h1>
+
+  <a class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+    + Neues Zimmer anlegen
+  </a>
+</div>
+
+<table class="mt-6 w-full text-left border-collapse">
+  <thead class="border-b">
+  <tr>
+    <th class="py-2">Zimmernummer</th>
+    <th>Kategorie</th>
+    <th>Minibar</th>
+    <th>Aktionen</th>
+  </tr>
+  </thead>
+  <tbody>
+    @for (room of roomDtoArr; track room) {
+      <tr class="border-b">
+        <td class="py-2">{{ room.roomNumber }}</td>
+        <td>{{ room.roomType }}</td>
+        <td>{{ room.hasMinibar ? 'Ja' : 'Nein' }}</td>
+        <td>
+          <a class="text-blue-600 hover:underline mr-3">Bearbeiten</a>
+          <a class="text-red-600 hover:underline">Löschen</a>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
